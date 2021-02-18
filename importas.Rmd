@@ -1,0 +1,34 @@
+# (PART) Tvarkymas {-}
+
+# Duomenų importas
+
+Pirma kliūtis dirbant su R yra klausimas, kaip importuoti duomenis į R. Kai dirbame su Excel ar SPSS, viskas atrodo paprasta - tiesiog įvedi duomenis į celes ir jie *yra*. R savaime neturime patogios sąsajos *įvedimui*. Dėl to šiame skyriuje susipažinsime su skirtingais būdais *importuoti* duomenis. Tai nėra išsamus gidas ir paminėsiu kelis pagrindinius būdus, tačiau principai čia gali būti pritaikyti ir kitiems duomenų tipams.
+
+## SPSS, Stata, SAS failai
+
+Importui naudosime __haven__ paketą.
+
+Daugiau gidų ir informacijos galima rasti čia:
+
+* [How to use the Haven package](https://rpubs.com/lefkios_paikousis/how-to-haven)
+* [Haven paketo svetainė](https://haven.tidyverse.org/)
+
+## .csv failai
+
+Importui naudosime __readr__ paketą.
+
+
+Alternatyva yra __data.table__ paketas, tačiau jį rekomenduočiau, jeigu .csv failo dydžiai yra dideli ir importo trukmė su __readr__ nebeatitinka lūkesčių.
+
+Daugiau gidų ir informacijos galima rasti čia:
+
+
+## .xls ir .xlsx failai
+
+Importui naudosime __readxl__ paketą.
+
+## XML failai
+
+## json failai
+
+## Duomenų bazės
