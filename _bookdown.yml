@@ -9,3 +9,4 @@ rmd_files: [
   
   "importas.Rmd"
 ]
+output_dir: docs
