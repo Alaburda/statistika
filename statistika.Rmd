@@ -1,0 +1,5 @@
+# Statistika
+
+## Daugiau nuorodų
+
+* [Interpreting Cohen's d Effect Size](https://rpsychologist.com/cohend/)

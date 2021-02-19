@@ -6,7 +6,15 @@ language:
 rmd_files: [
   "index.Rmd",
   "01-intro.Rmd",
+  "instaliuoti.Rmd",
+  "programavimas.Rmd",
   
-  "importas.Rmd"
-]
+  "importas.Rmd",
+  "sutvarkymas.Rmd",
+  "transformavimas.Rmd",
+  "statistiniai_testai.Rmd",
+  "grafikai.Rmd",
+  "komunikacija.Rmd"
+
+  ]
 output_dir: docs
