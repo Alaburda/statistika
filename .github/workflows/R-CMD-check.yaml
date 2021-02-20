@@ -27,8 +27,7 @@ jobs:
         shell: Rscript {0}
       - name: Render Book
         run: Rscript -e 'bookdown::render_book("index.Rmd")'
-      - name: Check
-        run: |
-          options(crayon.enabled = TRUE)
-          rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
-        shell: Rscript {0}
+      - uses: actions/upload-artifact@v1
+        with:
+          name: docs
+          path: docs/

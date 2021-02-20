@@ -1,6 +1,16 @@
 # Grafikai
 
+## Kaip pasirinkti grafiką?
+
+
+
+## InteraktyvŪs grafikai
+
+https://echarts4r.john-coene.com/index.html
+https://www.infoworld.com/article/3607068/plot-in-r-with-echarts4r.html
+https://www.brodrigues.co/blog/2021-02-06-echarts_map/
 
 ## Daugiau nuorodų
 
 * [Data Vis for Likert Questions](https://lmudge13.github.io/sample_code/likert_graphs.html)
+http://mfviz.com/hierarchical-models/
