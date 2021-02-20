@@ -1,8 +1,13 @@
 # Grafikai
 
+## Lentelės
+
+https://kcuilla.github.io/reactablefmtr/articles/data_bars.html
+
+
 ## Kaip pasirinkti grafiką?
 
-
+https://github.com/strengejacke/ggeffects
 
 ## InteraktyvŪs grafikai
 
