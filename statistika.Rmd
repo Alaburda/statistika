@@ -1,5 +1,36 @@
 # Statistika
 
+## Kas yra skirstinys?
+
+https://www.khstats.com/blog/tmle/tutorial/
+
+## Cronbach's Alfa
+
+https://journals.sagepub.com/doi/full/10.1177/2515245920951747
+
+## Tekstinių duomenų analizė
+
+https://juliasilge.shinyapps.io/learntidytext/
+
+## Logistinė regresija
+
+http://jakewestfall.org/blog/index.php/2018/03/12/logistic-regression-is-not-fucked/
+
+## Generalised Additive Models
+
+https://fromthebottomoftheheap.net/2021/02/02/random-effects-in-gams/
+https://noamross.github.io/gams-in-r-course/
+
+## Statistinė galia
+
+Kaip skaičiuoti post-hoc galią: https://cran.r-project.org/web/packages/metapower/vignettes/Using-metapower.html
+
+## Efekto dydis
+
+https://twitter.com/JoeHilgard/status/1331632974715097090
+
 ## Daugiau nuorodų
 
 * [Interpreting Cohen's d Effect Size](https://rpsychologist.com/cohend/)
+* [Common statistical tests are linear models](https://lindeloev.github.io/tests-as-linear/)
+* Co-Linearity: https://notstatschat.rbind.io/2021/02/11/co-linearity/
