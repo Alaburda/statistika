@@ -1,0 +1,25 @@
+## Kaip atlikti ANOVA?
+
+ANOVA (analysis of variance) išrado ir nedėkingą pavadinimą sugalvojo Seras Ronaldas Fišeris. ANOVA pavadinimas yra klaidinantis dvejopai. Viena, ANOVA testas savaime lygina ne dispersiją, o vidurkių skirtumus. Antra, yra keli metodai, kurie yra vadinami ANOVA, tačiau su ANOVA turi mažai bendro. Apie metodus sužinosime vėliau, šis skyrius koncentruosis į vienpusę ANOVA (one-way ANOVA).
+
+## Kodas
+
+ANOVA galima atlikti ir gauti jos rezultatus taip:
+
+```{r}
+
+aov(data = iris, Sepal.Length ~ Species)
+
+```
+
+## Kada naudoti ANOVA?
+
+ANOVA yra skirta patikrinti skirtumus tarp negu 2 grupių ir norime patikrinti, ar kuri nors pora grupių skiriasi viena nuo kitos. Taip pat svarbu, jog atlikus ANOVA tam tikros sąlygos būtų patenkintos: normalumas (*normality*), dispersijos homogeniškumas (*homogeneity of variance*) ir nepriklausomumas.
+
+## Kada nenaudoti ANOVA?
+
+Jeigu duomenys savaime nėra normaliai pasiskirstę, galima arba bandyti juos transformuoti (`log()`logaritminei transformacijai, `sqrt()` šakninei transformacijai) arba naudoti neparametrinį Kruskal-Wallis testą.
+
+
+
+

@@ -1,0 +1,12 @@
+# 3 ir daugiau grupių skirtumai: ANOVA ir Kruskal-Wallis testai
+
+## ANOVA
+
+## Kada atlikti ANOVA?
+
+## Kaip pateikti ANOVA rezultatus?
+
+## Kaip pagerinti savo rezultatų kokybę?
+
+Kai atliekame matavimus, visada susiduriame su matavimo paklaidomis. Matuodami spaudimą, matuodami storį ar medžiagos tvirtumą, visada gausime tam tikrų svyravimų. Svyravimai gali priklausyti nuo mūsų intervencijos - skirti vaistai, pritaikyta medžiaga - bet gera dalis svyravimų priklauso nuo faktorių, kurių mes *nematuojame*. Faktiškai neturime statistinio testo ar statistinės procedūros, kuri šias paklaidas sumažintų. Tačiau galime sukurti tyrimą taip, jog dalį nematuojamų/nepastebimų svyravimų užfiksuotume ir galėtume įtraukti į ANOVA modelį!
+

@@ -1,0 +1,115 @@
+# Chi-kvadrato testas
+
+
+*Pirsono chi-kvadrato ($\chi^2$) testą (ang. Pearson's Chi-square test)* ir *Fisher tikslų testą (ang. Fisher's exact test)* galime taikyti, kai norime patikrinti, ar tarp 2 kategorinių kintamųjų yra sąsaja. Jeigu norime tirti 3 kategorinių kintamųjų sąsają, turėtume naudoti *Cochran–Mantel–Haenszel* testą. 
+
+Kategoriniai kintamieji dar gali būti apibūdinti kaip *nominalieji* ar *diskretieji* kintamieji, bet duomenų analizės kontekste dažniau sutinkamas pirmas terminas. 
+
+Pirsono chi-kvadrato ($\chi^2$) testas patogumo dėlei vadinamas ($\chi^2$) arba chi-kvadrato testu. Testą XX a. amžiaus pradžioje sukūrė Karlas Pirsonas, o metodą vėliau patobulino Seras Ronaldas Fišeris. 
+
+## Kada naudoti testą?
+
+
+
+## Kaip atlikti testą?
+
+Chi-kvadrato testą galima atlikti su `chisq.test()` funkcija. Testui atlikti naudoti `penguins` duomenų rinkinį iš `palmerpenguins` bibliotekos, kur bandysime įsitikinti, ar yra sąsaja tarp pingvino rūšies ir pingvino lyties. Priešingai negu kiti testai, ši funkcija tikisi tabuliuotos lentelės, testą reikėtų atlikti taip:
+
+```{r, warning = FALSE}
+
+library(palmerpenguins)
+
+chisq.test(table(penguins$species,penguins$island))
+
+```
+
+Chi-kvadrato testas grąžina tris skaičius, kuriuos galėtume pateikti savo tyrime: $\chi^2$ reikšmę (299,55), laisvės laipsnių skaičių (4) ir p reikšmę (< 0,001). p reikšmė yra mažesnė negu 0,05, todėl galime atmesti hipotezę, jog nėra sąsajos tarp pingvinų ir salos, kurioje jie gyvena. Jeigu pasižiūrėtume į dažnių lentelę, pastebėtume, jog tai gana akivaizdu - kai kurios rūšys gyvena tik vienoje iš salų!
+
+```{r}
+
+table(penguins$species,penguins$island)
+
+```
+
+Kai vienas iš tikėtinų dažnių yra mažesnis negu 5, tokiu atveju reikėtų naudoti ne Chi-kvadrato testą, o Fisher tikslų testą. Tai galima įsitikinti su `mtcars` duomenų rinkiniu:
+
+```{r}
+
+chisq.test(table(mtcars$gear,mtcars$cyl))
+
+```
+Šįkart R grąžina įspėjimą prieš pateikdamas rezultatą, jog testas gali būti netikslus. Netikslumas yra paaiškintas žemiau, bet tokiu atveju yra geriausia naudoti Fisher tikslų testą:
+
+```{r}
+
+fisher.test(table(mtcars$gear,mtcars$cyl))
+
+```
+Fisher tikslus testas yra paremtas kombinatorika, o ne skirstiniais, todėl jis negali grąžinti chi-kvadrato reikšmės ir negali grąžinti laisvės laispnių skaičiaus. Jis grąžina tikimybę, jog duomenys bus taip pasiskirstę tarp dviejų kategorinių kintamųjų, kai žinome kiekvieno kategorinio kintamojo dažnius individualiai.
+
+
+## Kaip pateikti testo rezultatus?
+
+Žinodami, kaip atlikti testą, toliau norėtume šį testą sėkmingai pateikti moksliniame straipsnyje ar tyrimo pristatyme. Naudodami `penguins` duomenų rinkinį kaip pavyzdį, savo atliktą testą galėtume pateikti taip:
+
+> Chi-kvadrato testas atskleidė, jog asociacija tarp stebėtų pingvinų rūšies ir salos buvo statistiškai reikšminga ($\chi^2$(4) = 299,55, p < 0,001). `Adelie` rūšies pingvinai buvo vieninteliai rasti Torgersen saloje, `Gentoo` pingvinai buvo dažniau randami Biscoe saloje, o `Chinstrap` pingvinai - Dream saloje. 
+
+Grafiškai rezultatus galima pateikti dvejopai. Jeigu norime akcentuoti proporcijas tarp grupių, geriausia naudoti "stacked" tipo stulpelinę diagramą. Jos kodas atrodo taip: 
+
+```{r, warning = F, message = F}
+
+library(ggplot2)
+library(dplyr)
+
+penguins %>% 
+  count(island,species) %>% 
+  group_by(island) %>% 
+  mutate(pct = prop.table(n),
+         pct_txt = glue::glue("{n} ({round(100*prop.table(n),2)}%)")) %>% 
+  ggplot(aes(x = island, y = pct, fill = species, label = pct_txt)) + 
+  geom_bar(position = position_fill(), 
+           stat = "identity",
+           color = "black") +
+  geom_text(position = position_fill(vjust = 0.5)) +
+  scale_y_continuous(labels = scales::percent) + 
+  labs(x = "Rūšis",
+       y = "Dalis pingvinų",
+       fill = "Sala") + 
+  theme_bw()
+
+```
+
+Bet jeigu norėtume pabrėžti ne proporcijas, o atkreipti dėmesį į konkrečias absoliučias reikšmes, galėtume naudoti išskaidytą stulpelinę diagramą:
+
+```{r}
+
+penguins %>% 
+  group_by(island,species, .drop = FALSE) %>% 
+  summarise(n = n()) %>% 
+  group_by(island) %>% 
+  mutate(pct = prop.table(n),
+         pct_txt = glue::glue("{n} 
+                              ({round(100*prop.table(n),2)}%)")) %>% 
+  ggplot(aes(x = island, y = pct, fill = species, label = pct_txt)) + 
+  geom_bar(position = position_dodge(), 
+           stat = "identity",
+           color = "black") +
+  geom_text(position = position_dodge(0.9),
+            vjust = -0.3,
+            size = 3) +
+  scale_y_continuous(labels = scales::percent, limits = c(0,1.1)) + 
+  labs(x = "Rūšis",
+       y = "Dalis pingvinų",
+       fill = "Sala") + 
+  theme_bw()
+
+```
+
+## Kada testo nereikėtų naudoti?
+
+Chi-kvadrato testas turi dvi prielaidas:
+
+* Tikėtini dažniai yra pakankamai dideli - tokiu atveju reikėtų rinktis Fisher tikslų testą.
+* Stebėjimai yra nepriklausomi vienas nuo kito - jeigu kokiu nors būdu mūsų stebėjimai galėjo turėti įtakos vienas kitam, tokiu atveju Chi-kvadrato testas dažniau grąžins klaidingai teigiamą rezultatą. Tokiu atveju vertėtų pasitelkti McNemar arba Cochran testus.
+
+## Kaip veikia asociacijos testai?
