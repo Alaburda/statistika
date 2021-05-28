@@ -3,6 +3,7 @@
 ## Lentelės
 
 https://kcuilla.github.io/reactablefmtr/articles/data_bars.html
+https://github.com/vincentarelbundock/modelsummary
 
 
 ## Kaip pasirinkti grafiką?

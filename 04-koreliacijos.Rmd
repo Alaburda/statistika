@@ -1,0 +1,149 @@
+# Koreliacijos
+
+Prieš kersdami sieną tarp statistinių testų ir statistinio modeliavimo, turime sustoti prie koreliacijų. Koreliacijų testai techniškai gali nebūti naudojami, nes, kaip pamatysime vėliau, tiesinė regresija pateikia panašų rezultatą su dar daugiau informacijos. Kodėl koreliacijos iki šiol naudojamos?
+
+Koreliacijos patogios tuo, jog jos grąžina būtent mažiau informacijos - dažniausiai tai bus koreliacijos koeficientas, kuris gali svyruoti nuo -1 iki 1, ir p reikšmė, nurodanti, ar koreliacija yra statistiškai reikšminga. Jeigu koreliacijos koeficientas yra arti 1, tai reiškia, jog turime tobulą teigiamą santykį. Pavyzdžiui, jeigu didėja pingvino masė, didėja ir jo sparnų ilgis. O jeigu koreliacijos koeficientas yra arti -1, tuomet turime neigiamą santykį. Atitinkamai, reikšmės arčiau 0 nurodo, jog santykis yra silpnas ir galbūt atsitiktinis.
+
+Teoriškai tai skamba kėblokai, todėl geriausia pamatyti, kaip tai atrodo vizualiai:
+
+```{r}
+
+library(tidyverse)
+
+complement <- function(y, rho, x) {
+  if (missing(x)) x <- rnorm(length(y)) # Optional: supply a default if `x` is not given
+  y.perp <- residuals(lm(x ~ y))
+  rho * sd(y.perp) * y + y.perp * sd(y) * sqrt(1 - rho^2)
+}
+
+
+
+complement(y = rnorm(200), 0.6)
+
+
+tmp <- data.frame(x = rnorm(200)) %>% 
+  mutate(`-0.99` = complement(x, -0.99),
+         `-0.9` = complement(x, -0.9),
+         `-0.7` = complement(x, -0.7),
+         `-0.4` = complement(x, -0.4),
+         `-0.2` = complement(x, -0.2),
+         `0` = complement(x, 0),
+         `0.2` = complement(x, 0.2),
+         `0.4` = complement(x, 0.4),
+         `0.7` = complement(x, 0.7),
+         `0.9` = complement(x, 0.9),
+         `0.99` = complement(x, 0.99)) %>% 
+  pivot_longer(cols = -x, names_to = "coef", values_to = "y") %>% 
+  mutate(coef = as.numeric(coef))
+
+tmp %>% 
+  ggplot(aes(x = x, y = y)) + 
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = "lm", se = FALSE, alpha = 0.4) +
+  facet_wrap(~coef) + 
+  theme_bw()
+
+
+```
+
+
+
+Prieš atliekant koreliacijas, būtina pirma nusibrėžti taškinę diagramą, jog matytume, koks santykis tarp dviejų kintamųjų yra iš tikrųjų. Kaip matėme, 0.2 koreliacijos atveju grafikai atrodė kaip taškų debesėliai ir kažkoks menamas ryšys atrodė abejotinas. Bet dar svarbiau išvengti stiprių koreliacijų, kurių iš tikrųjų nėra.
+
+Geras pavyzdys yra vadinamas Anscombe kvartetas, kuris vizualiai atrodo, tačiau iš tikrųjų visais atvejais koreliacijos koeficientas yra toks pats:
+
+```{r}
+
+anscombe_m <- data.frame()
+
+for(i in 1:4)
+  anscombe_m <- rbind(anscombe_m, data.frame(set=i, x=anscombe[,i], y=anscombe[,i+4]))
+
+ggplot(anscombe_m, aes(x, y)) + geom_point(size=5, color="red", fill="orange", shape=21) + geom_smooth(method="lm", fill=NA, fullrange=TRUE) + facet_wrap(~set, ncol=2)
+
+```
+
+Pirmu atveju mes matome stiprų teigiamą ryšį, tačiau antru atveju ryšys nėra tiesiškas, trečiu ir ketvirtu atveju mes turime neįprastai didelių reikšmių. Bet jeigu pavienės reikšmės jūsų negąsdina, tada galbūt išgąsdins šis grafikas, kur koreliacijos koeficientai taip pat yra identiški: 
+
+```{r}
+
+library(datasauRus)
+ggplot(datasaurus_dozen, aes(x=x, y=y, colour=dataset))+
+  geom_point()+
+  theme_void()+
+  theme(legend.position = "none")+
+  facet_wrap(~dataset, ncol=3)
+
+
+```
+
+
+## Kada naudoti koreliacijos testą?
+
+Pirsono koreliacijos koeficientas yra naudingas testas daugelyje skirtingų scenarijų, bet kaip ir kiekvienas testas, jis negali būti pritaikytas visur. Visų pirma, Pirsono koreliacijos koeficientas apibūdina *tiesinį* ryšį tarp dviejų kiekybinių kintamųjų. Kitaip tariant, testas brėžia tiesę (kaip matėme aukščiau) ir įvertina, ar tiesė juda į viršų, į apačią ir kaip stipriai.
+
+Bet Pirsono koreliacijos koeficientas nebus tinkamas, jeigu ryšys tarp kintamųjų nebus tiesinis. Pavyzdžiui, ryšys tarp fermento veikimo greičio ir substrato koncentracijos yra netiesinis - užtenka mažo kiekio substrato, jog fermento greitis būtų arti maksimalaus. Taip pat ryšys tarp atletinių gebėjimų ir nubėgto atstumo nėra tiesinis - kiekvienais metais sportininkų gebėjimai gerėja ir kiekvienais metais 100 m. nubėgama greičiau, bet kažkada bus pasiekta apatinė įmanoma riba.
+
+Kai turime duomenis, kurie akivaizdžiai neturi tiesinio ryšio tarpusavyje arba kurie turi daugiau rangus, o ne kiekybinius skaičius, turėtume naudoti Spearman'o koreliacijos koeficientą. Jo principas, jog kiekvienam kiekybiniam kintamajam aukščiausia vertė yra prilyginama vienetui, ir mažėjimo tvarka skaičiai didėją.
+
+rank (hours worked) rank (grade received)
+student 1 1 1
+student 2 10 10
+student 3 6 6
+student 4 2 2
+student 5 3 3
+student 6 5 5
+student 7 4 4
+student 8 8 8
+student 9 7 7
+student 10 9 9
+
+s ρ
+
+$\ro$\ stuff
+
+
+## Kaip atlikti testą?
+
+Testą galima atlikti su `cor.test()` funkcija:
+
+```{r}
+
+library(palmerpenguins)
+
+cor.test(penguins$bill_length_mm,penguins$bill_depth_mm, method = "pearson")
+
+```
+
+Testas grąžina šias reikšmes:
+
+## Kaip pateikti testo rezultatus?
+
+```{r}
+
+
+cor.test(penguins$bill_length_mm,penguins$bill_depth_mm, method = "pearson")
+
+
+```
+
+Gautus testo rezultatus galima būtų pateikti taip:
+
+> Atlikus Pearson Koreliacijos testą, buvo nustatyta statistiškai reikšminga silpna ir neigiama koreliacija tarp snapo ilgio ir snapo gylio.
+
+Vizualiai rezultatą galima pateikti su taškine diagrama:
+
+```{r}
+
+ggplot(penguins, aes(x = bill_length_mm,
+                     y = bill_depth_mm,
+                     color = species)) + 
+  geom_point() + 
+  geom_smooth(method = "lm")
+
+
+```
+
+## Simpsono paradoksas
+
+

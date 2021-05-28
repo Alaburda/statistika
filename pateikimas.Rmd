@@ -1,0 +1,7 @@
+# Pateikimas
+
+## Eksportavimas iš R į Word
+
+## Grafikai
+
+## Lentelės
